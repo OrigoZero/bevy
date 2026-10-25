@@ -152,7 +152,9 @@ impl Plugin for ScheduleRunnerPlugin {
                                 }
                             };
                             *base_tick_closure.borrow_mut() =
-                                Some(Closure::wrap(Box::new(tick_app) as Box<dyn FnMut()>));
+                                Some(Closure::wrap_assert_unwind_safe(
+                                    Box::new(tick_app) as Box<dyn FnMut()>,
+                                ));
                             set_timeout(base_tick_closure.borrow().as_ref().unwrap(), asap);
 
                             exit.take()
